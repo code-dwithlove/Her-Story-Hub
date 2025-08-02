@@ -8,51 +8,158 @@
     body {
       margin: 0;
       font-family: 'Open Sans', sans-serif;
-      background: linear-gradient(to bottom, #fefefe, #f4f4f4);
+      background: radial-gradient(#0b0d1e, #0f172a);
+      overflow-x: hidden;
+      color: #fff;
       text-align: center;
-      color: #222;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     h1 {
       font-family: 'Playfair Display', serif;
       margin-top: 80px;
       font-size: 2.8em;
-      color: #4a4a4a;
+      color: #f9fafb;
     }
 
     .album-link {
       display: block;
       margin: 40px auto;
-      width: 260px;
+      width: 280px;
       padding: 20px;
       border-radius: 12px;
-      background-color: #fff;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(6px);
+      box-shadow: 0 6px 12px rgba(255,255,255,0.1);
       text-decoration: none;
-      color: #333;
+      color: #fcd34d;
       font-size: 1.2em;
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
     .album-link:hover {
       transform: translateY(-4px);
-      box-shadow: 0 10px 16px rgba(0,0,0,0.15);
+      box-shadow: 0 0 8px 4px rgba(255,255,255,0.2);
+      text-shadow: 0 0 4px #fcd34d;
     }
 
     footer {
-      margin-top: 80px;
+      margin-top: 60px;
       font-size: 0.9em;
-      color: #777;
+      color: #cbd5e1;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
     }
   </style>
 </head>
 <body>
+  <canvas id="stars"></canvas>
   <h1>Her Story in Three Acts</h1>
 
+  <!-- ⭐ Typewriter Intro Before Memory Album -->
+  <div style="margin-top:30px; font-family:'Playfair Display',serif; font-size:1.5em; color:#fcd34d;">
+    <span id="typed-text"></span>
+  </div>
+
+  <!-- 💌 Memory Album Link -->
   <a href="https://code-dwithlove.github.io/Happy-Birthday-Madam/" class="album-link">💌 The Words We Couldn’t Say</a>
+
+  <!-- ✨ Poetic Transition to Photo Album -->
+  <div style="margin:40px 20px;color:#f9fafb;font-style:italic;font-size:1.2em;">
+    “Some memories speak without being seen…”
+  </div>
+
+  <!-- 📸 Photo Album Link -->
   <a href="https://code-dwithlove.github.io/Album/" class="album-link">📸 The Moments That Stayed</a>
+
+  <!-- 💓 Heartbeat Transition to Video Album -->
+  <div style="margin:40px 20px;font-size:1.1em;color:#f9fafb;text-align:center;">
+    <div style="animation:pulse 2s infinite;">💓</div>
+    <p style="font-style:italic;">“What we saw… we carried forever.”</p>
+  </div>
+
+  <!-- 🎥 Video Album Link -->
   <a href="https://code-dwithlove.github.io/Video-Album/" class="album-link">🎥 The Memories That Moved</a>
 
+  <!-- 🎁 Birthday Message & Love Sticker -->
+  <div style="margin-top:60px;text-align:center;">
+    <p style="font-size:1.4em;color:#f472b6;">Happy Birthday, with all my heart 💝</p>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Emoji_u1f498.svg/240px-Emoji_u1f498.svg.png"
+         alt="Love Sticker" style="width:120px;animation:bounce 1.8s infinite;">
+  </div>
+
   <footer>Crafted with love by Anish 🤍</footer>
+
+  <!-- 🌠 Star Animation Script -->
+  <script>
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let w, h;
+    const stars = [];
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    for (let i = 0; i < 150; i++) {
+      stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 1.2,
+        alpha: Math.random(),
+        dx: (Math.random() - 0.5) * 0.2,
+        dy: (Math.random() - 0.5) * 0.2
+      });
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      for (let star of stars) {
+        star.x += star.dx;
+        star.y += star.dy;
+        if (star.x < 0 || star.x > w) star.dx *= -1;
+        if (star.y < 0 || star.y > h) star.dy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha})`;
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+
+  <!-- ⌨️ Typewriter Effect -->
+  <script>
+    const message = "Some memories speak without being seen...";
+    let i = 0;
+    function typeWriter() {
+      if (i < message.length) {
+        document.getElementById("typed-text").innerHTML += message.charAt(i);
+        i++;
+        setTimeout(typeWriter, 75);
+      }
+    }
+    window.onload = typeWriter;
+  </script>
 </body>
 </html>
